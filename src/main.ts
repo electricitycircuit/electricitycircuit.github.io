@@ -3,18 +3,14 @@ import './style.css'
 type IconGlyph = {
   viewBox: string
   path: string
+  className?: string
+  filled?: boolean
 }
 
 type ServiceCategory = {
   title: string
   bullets: string[]
   icon: IconGlyph
-}
-
-type Testimonial = {
-  quote: string
-  author: string
-  role: string
 }
 
 type ContactChannel = {
@@ -70,6 +66,17 @@ const icons = {
   mail: {
     viewBox: '0 0 24 24',
     path: 'M3 6h18v12H3z M3 6l9 8 9-8'
+  },
+  whatsapp: {
+    viewBox: '0 0 24 24',
+    path: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z',
+    className: 'whatsapp-chip',
+    filled: true
+  },
+  instagram: {
+    viewBox: '0 0 24 24',
+    path: 'M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5zm5.25-4a1 1 0 1 1-1 1 1 1 0 0 1 1-1z',
+    className: 'instagram-chip'
   }
 } as const
 
@@ -122,29 +129,11 @@ const reasons = [
   'אחריות מלאה ושירות אישי וזמין לכל שאלה ובקשה'
 ]
 
-const testimonials: Testimonial[] = [
-  {
-    quote: 'השיפוץ של הבית שלנו הסתיים בדיוק בזמן. יניב דאג לכל אישורי חברת החשמל והשאיר בית מואר ובטוח.',
-    author: 'משפחת סגל',
-    role: 'רמת השרון'
-  },
-  {
-    quote: 'כפרויקט מסחרי היינו חייבים חשמלאי שמבין גם בתיאום מול הקבלן וגם בעמידה בתקנים. יניב היה שם בכל שלב.',
-    author: 'מיכל דביר',
-    role: 'אדריכלית וותיקה'
-  },
-  {
-    quote: 'תקלת החשמל בחנות טופלה תוך שעה בלילה. שירות אמיתי וחיוך גדול גם בשעת חירום.',
-    author: 'אלעד כץ',
-    role: 'בעל חנות, תל אביב'
-  }
-]
-
 const contactChannels: ContactChannel[] = [
   {
     label: 'התקשרו עכשיו',
-    value: '052-555-1099',
-    href: 'tel:+972525551099',
+    value: '052-555-1309',
+    href: 'tel:+972525551309',
     accent: 'primary',
     dir: 'ltr',
     icon: icons.phone
@@ -152,9 +141,16 @@ const contactChannels: ContactChannel[] = [
   {
     label: 'שלחו ווטסאפ',
     value: 'הודעה מהירה',
-    href: 'https://wa.me/972525551099',
+    href: 'https://wa.me/972525551309',
     accent: 'neutral',
-    icon: icons.chat
+    icon: icons.whatsapp
+  },
+  {
+    label: 'עקבו באינסטגרם',
+    value: '@yaniv.ca',
+    href: 'https://www.instagram.com/yaniv.ca',
+    accent: 'neutral',
+    icon: icons.instagram
   },
   {
     label: 'כתבו מייל',
@@ -209,6 +205,24 @@ const galleryImages = [
   }
 ]
 
+const faqs = [
+  {
+    question: 'האם אתם חשמלאים מוסמכים ורשומים?',
+    answer:
+      'בהחלט. יניב כהן הוא חשמלאי מוסמך רשום והנדסאי חשמל בעל רישיון משרד העבודה, עם ביטוחים מלאים ועמידה בתקני IEC.'
+  },
+  {
+    question: 'מה זמני התגובה לפרויקטים ותקלות חירום?',
+    answer:
+      'מענה טלפוני ניתן בכל יום בין 08:00–20:00, ותקלות חירום מטופלות תוך עד 90 דקות באזורי המרכז, תל אביב והשרון.'
+  },
+  {
+    question: 'האם ניתן לקבל דוחות בדיקה ואישורי חברת חשמל?',
+    answer:
+      'כן. אנו מבצעים בדיקות עומסים, דוחות בודק מוסמך והכנה לביקורת חברת החשמל, כולל מסמכי מסירה מסודרים.'
+  }
+]
+
 const app = document.querySelector<HTMLDivElement>('#app')
 
 if (!app) {
@@ -218,13 +232,18 @@ if (!app) {
 const currentYear = new Date().getFullYear()
 const assetBase = import.meta.env.BASE_URL
 const logoPath = `${assetBase}logo.png`
-const renderIcon = ({ viewBox, path }: IconGlyph) => `
-  <span class="icon-chip">
+const renderIcon = ({ viewBox, path, className, filled }: IconGlyph) => {
+  const pathAttrs = filled
+    ? 'fill="currentColor"'
+    : 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"'
+  return `
+  <span class="icon-chip ${className ?? ''}">
     <svg viewBox="${viewBox}" role="img" aria-hidden="true">
-      <path d="${path}" />
+      <path d="${path}" ${pathAttrs} />
     </svg>
   </span>
 `
+}
 
 app.innerHTML = `
   <main class="page">
@@ -236,8 +255,9 @@ app.innerHTML = `
         <p>${heroContent.intro}</p>
         <p>${heroContent.details}</p>
         <p>${heroContent.promise}</p>
+        <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל בכיר</p>
         <div class="hero-cta">
-          <a class="btn primary" href="tel:+972525551099">שיחה מיידית</a>
+          <a class="btn primary" href="tel:+972525551309">שיחה מיידית</a>
           <a class="btn secondary" href="#contact">השארת פרטים</a>
         </div>
         <ul class="pill-list">
@@ -308,31 +328,6 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="section testimonials" id="testimonials">
-      <div class="section-head">
-        <p class="eyebrow">לקוחות מספרים</p>
-        <h2>שקט נפשי מתחיל בחשמלאי נכון</h2>
-      </div>
-      <div class="testimonials-grid">
-        ${testimonials
-          .map(
-            (testimonial) => `
-              <blockquote class="card testimonial-card">
-                <div class="rating" aria-label="5 מתוך 5">
-                  ${'<span>★</span>'.repeat(5)}
-                </div>
-                <p>“${testimonial.quote}”</p>
-                <footer>
-                  <span>${testimonial.author}</span>
-                  <span>${testimonial.role}</span>
-                </footer>
-              </blockquote>
-            `
-          )
-          .join('')}
-      </div>
-    </section>
-
     <section class="section reasons" id="reasons">
       <div class="section-head">
         <p class="eyebrow">למה לבחור בנו</p>
@@ -345,6 +340,26 @@ app.innerHTML = `
               <div class="card reason-card">
                 <p>${reason}</p>
               </div>
+            `
+          )
+          .join('')}
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="section-head">
+        <p class="eyebrow">שאלות נפוצות</p>
+        <h2>כל מה שצריך לדעת</h2>
+        <p class="section-desc">מידע על הכשרות, זמינות ותהליכי בדיקה כדי שתדעו בדיוק למה לצפות בכל שלב.</p>
+      </div>
+      <div class="faq-grid">
+        ${faqs
+          .map(
+            (faq) => `
+              <article class="card faq-card">
+                <h3>${faq.question}</h3>
+                <p>${faq.answer}</p>
+              </article>
             `
           )
           .join('')}
@@ -402,9 +417,10 @@ app.innerHTML = `
     <footer class="footer">
       <p>© ${currentYear} מעגל החשמל – יניב כהן.</p>
       <p>
-        <a href="https://wa.me/972525551099" target="_blank" rel="noopener">ווטסאפ</a> ·
+        <a href="https://wa.me/972525551309" target="_blank" rel="noopener">ווטסאפ</a> ·
         <a href="mailto:electricitycircuit@outlook.com">אימייל</a> ·
-        <a href="tel:+972525551099">טלפון</a>
+        <a href="tel:+972525551309">טלפון</a> ·
+        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener">אינסטגרם</a>
       </p>
     </footer>
   </main>
