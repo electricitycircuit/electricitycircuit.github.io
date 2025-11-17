@@ -14,11 +14,11 @@ npm run dev
 ## בנייה ופריסה
 
 - `npm run build` יוצר את התוכן הסופי בתיקיית `dist/`.
-- קובץ `vite.config.ts` מוגדר עם `base: '/electricitycircuit/'` כדי ש־GitHub Pages ידע לשרת את הקבצים מתת־נתיב זה.
+- קובץ `vite.config.ts` מוגדר עם `base: '/'` כי האתר נפרס כריפו משתמש (`electricitycircuit.github.io`).
 - תהליך הפריסה מתבצע אוטומטית דרך GitHub Actions (`.github/workflows/deploy.yml`):
   1. בכל `push` ל־`main` (או `workflow_dispatch`) נבנה האתר בענן.
   2. התוכן מועלה כ־artifact ומפורסם לסביבת GitHub Pages.
-- ב־Settings → Pages יש לבחור "GitHub Actions" כמקור. עם סיום ה־workflow האתר יהיה זמין ב־`https://electricitycircuit.github.io/electricitycircuit/`.
+- ב־Settings → Pages יש לבחור "GitHub Actions" כמקור. עם סיום ה־workflow האתר יהיה זמין ב־`https://electricitycircuit.github.io/`.
 
 ## התאמות עתידיות
 

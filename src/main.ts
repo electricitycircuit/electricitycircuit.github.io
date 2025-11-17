@@ -135,12 +135,14 @@ if (!app) {
 }
 
 const currentYear = new Date().getFullYear()
+const assetBase = import.meta.env.BASE_URL
+const logoPath = `${assetBase}logo.png`
 
 app.innerHTML = `
   <main class="page">
     <header class="hero" id="hero">
       <div class="hero-content">
-        <img class="logo-mark" src="/logo.png" alt="מעגל החשמל" loading="lazy" />
+        <img class="logo-mark" src="${logoPath}" alt="מעגל החשמל" loading="lazy" />
         <div class="badge">${heroContent.badge}</div>
         <h1>${heroContent.title}<span>${heroContent.subtitle}</span></h1>
         <p>${heroContent.intro}</p>
