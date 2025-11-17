@@ -179,6 +179,15 @@ body {
   gap: 16px;
 }
 
+/* Safari desktop - force vertical stacking */
+@supports (-webkit-appearance: none) {
+  @media screen and (min-width: 768px) and (-webkit-min-device-pixel-ratio: 0) {
+    .hero-gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
 .hero-gallery figure {
   background: rgba(255, 255, 255, 0.04);
   border-radius: var(--radius-md);
@@ -246,7 +255,8 @@ body {
 .services-grid,
 .credentials-grid,
 .testimonials-grid,
-.contact-grid {
+.contact-grid,
+.faq-grid {
   display: grid;
   gap: 24px;
 }
@@ -286,6 +296,10 @@ body {
 
 .contact-grid {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.faq-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 .card {
