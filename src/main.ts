@@ -170,17 +170,17 @@ const contactHighlights = [
 
 const heroGallery = [
   {
-    src: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=700&q=80',
+    src: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&w=700&q=80',
     alt: 'לוח חשמל מסודר',
     label: 'לוחות מבוקרים'
   },
   {
-    src: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=700&q=80',
+    src: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=700&q=80',
     alt: 'חיווט בית חכם',
     label: 'חיווט חכם'
   },
   {
-    src: 'https://images.unsplash.com/photo-1560448075-bb485b067938?auto=format&fit=crop&w=700&q=80',
+    src: 'https://images.unsplash.com/photo-1713937400833-f817938b51e4?auto=format&fit=crop&w=700&q=80',
     alt: 'צוות התקנה מקצועי',
     label: 'צוותים בשטח'
   }
@@ -188,19 +188,19 @@ const heroGallery = [
 
 const galleryImages = [
   {
-    src: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80',
+    src: 'https://images.unsplash.com/photo-1757924461488-ef9ad0670978?auto=format&fit=crop&w=900&q=80',
     caption: 'תאורת אווירה בסלון חכם'
   },
   {
-    src: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80',
+    src: 'https://images.unsplash.com/photo-1584169417032-d34e8d805e8b?auto=format&fit=crop&w=900&q=80',
     caption: 'שדרוג לוח תלת פאזי לעסק קמעונאי'
   },
   {
-    src: 'https://images.unsplash.com/photo-1431576901776-e539bd916ba2?auto=format&fit=crop&w=900&q=80',
+    src: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80',
     caption: 'תכנון מוקפד עם אדריכלים בשטח'
   },
   {
-    src: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80',
+    src: 'https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?auto=format&fit=crop&w=900&q=80',
     caption: 'עמדות טעינה לרכב חשמלי בבניין משרדים'
   }
 ]
