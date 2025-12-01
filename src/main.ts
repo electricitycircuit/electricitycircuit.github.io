@@ -246,53 +246,53 @@ const renderIcon = ({ viewBox, path, className, filled }: IconGlyph) => {
 }
 
 app.innerHTML = `
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">
+        <img src="${logoPath}" alt="מעגל החשמל" />
+      </a>
+      <div class="nav-links">
+        <a href="#services">שירותים</a>
+        <a href="#reasons">למה אנחנו</a>
+        <a href="#gallery">פרויקטים</a>
+        <a href="#contact" class="nav-cta">צור קשר</a>
+      </div>
+    </div>
+  </nav>
   <main class="page">
     <header class="hero" id="hero">
       <div class="hero-content">
-        <img class="logo-mark" src="${logoPath}" alt="מעגל החשמל" loading="lazy" />
+        <img class="logo-mark" src="${logoPath}" alt="מעגל החשמל - יניב כהן חשמלאי מוסמך" loading="eager" />
         <div class="badge">${heroContent.badge}</div>
         <h1>${heroContent.title}<span>${heroContent.subtitle}</span></h1>
         <p>${heroContent.intro}</p>
-        <p>${heroContent.details}</p>
-        <p>${heroContent.promise}</p>
         <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל בכיר</p>
         <div class="hero-cta">
-          <a class="btn primary" href="tel:+972525551309">שיחה מיידית</a>
-          <a class="btn secondary" href="#contact">השארת פרטים</a>
+          <a class="btn primary" href="tel:+972525551309" aria-label="התקשרו עכשיו">שיחה מיידית</a>
+          <a class="btn secondary" href="#contact" aria-label="צור קשר">השארת פרטים</a>
         </div>
         <ul class="pill-list">
           <li>15+ שנות ניסיון</li>
           <li>תיעוד מלא ואחריות</li>
           <li>מענה חירום 24/7</li>
+          <li>רישיון משרד העבודה</li>
         </ul>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-gallery">
-          ${heroGallery
-            .map(
-              (item) => `
-                <figure>
-                  <img src="${item.src}" alt="${item.alt}" loading="lazy" />
-                  <figcaption>${item.label}</figcaption>
-                </figure>
-              `
-            )
-            .join('')}
-        </div>
       </div>
     </header>
 
-    <section class="section story">
+    <section class="section story" id="about">
       <div class="section-head">
         <p class="eyebrow">על הדרך שלי</p>
         <h2>ליווי אישי עד למסירה מושלמת</h2>
+        <p class="section-desc">${heroContent.promise}</p>
       </div>
       <div class="rich-text">
         ${storyParagraphs.map((paragraph) => `<p>${paragraph}</p>`).join('')}
+        <p><strong>${heroContent.details}</strong></p>
       </div>
     </section>
 
-    <section class="section services" id="services">
+    <section class="section services section-bg" id="services" data-bg-image="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1920&q=80">
       <div class="section-head">
         <p class="eyebrow">השירותים שלנו</p>
         <h2>פתרונות חשמל מותאמים לבית ולעסק</h2>
@@ -328,10 +328,11 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="section reasons" id="reasons">
+    <section class="section reasons section-bg" id="reasons" data-bg-image="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1920&q=80">
       <div class="section-head">
         <p class="eyebrow">למה לבחור בנו</p>
-        <h2>מעגל החשמל – סטנדרט של דיוק</h2>
+        <h2>מעגל החשמל – סטנדרט של דיוק ואמינות</h2>
+        <p class="section-desc">כל עבודה מבוצעת על ידי חשמלאי מוסמך בלבד, עם תיעוד מלא, אחריות ואמינות ללא פשרות.</p>
       </div>
       <div class="reasons-grid">
         ${reasons
@@ -366,7 +367,7 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="section gallery" id="gallery">
+    <section class="section gallery section-bg" id="gallery" data-bg-image="https://images.unsplash.com/photo-1757924461488-ef9ad0670978?auto=format&fit=crop&w=1920&q=80">
       <div class="section-head">
         <p class="eyebrow">מהשטח</p>
         <h2>פרויקטים ותיעוד</h2>
@@ -415,13 +416,73 @@ app.innerHTML = `
     </section>
 
     <footer class="footer">
-      <p>© ${currentYear} מעגל החשמל – יניב כהן.</p>
+      <p>© ${currentYear} מעגל החשמל – יניב כהן. חשמלאי מוסמך והנדסאי חשמל.</p>
       <p>
-        <a href="https://wa.me/972525551309" target="_blank" rel="noopener">ווטסאפ</a> ·
-        <a href="mailto:electricitycircuit@outlook.com">אימייל</a> ·
-        <a href="tel:+972525551309">טלפון</a> ·
-        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener">אינסטגרם</a>
+        <a href="https://wa.me/972525551309" target="_blank" rel="noopener" aria-label="ווטסאפ">ווטסאפ</a> ·
+        <a href="mailto:electricitycircuit@outlook.com" aria-label="אימייל">אימייל</a> ·
+        <a href="tel:+972525551309" aria-label="טלפון">טלפון</a> ·
+        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener" aria-label="אינסטגרם">אינסטגרם</a>
       </p>
     </footer>
   </main>
 `
+
+// Scroll animations
+const observerOptions = {
+  threshold: 0.1,
+  rootMargin: '0px 0px -50px 0px'
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible')
+    }
+  })
+}, observerOptions)
+
+// Navbar scroll effect
+const navbar = document.querySelector('.navbar')
+let lastScroll = 0
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.pageYOffset
+  
+  if (currentScroll > 50) {
+    navbar?.classList.add('scrolled')
+  } else {
+    navbar?.classList.remove('scrolled')
+  }
+  
+  lastScroll = currentScroll
+})
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault()
+    const target = document.querySelector(this.getAttribute('href') || '')
+    if (target) {
+      const offsetTop = target.offsetTop - 80
+      window.scrollTo({
+        top: offsetTop,
+        behavior: 'smooth'
+      })
+    }
+  })
+})
+
+// Set background images for sections with data-bg-image attribute
+document.querySelectorAll('.section-bg[data-bg-image]').forEach((section) => {
+  const bgImage = section.getAttribute('data-bg-image')
+  if (bgImage) {
+    section.style.backgroundImage = `url(${bgImage})`
+  }
+})
+
+// Observe all animated elements after DOM is ready
+setTimeout(() => {
+  document.querySelectorAll('.section-head, .rich-text, .services-grid, .contact-grid, .faq-grid, .reasons-grid, .gallery-grid').forEach((el) => {
+    observer.observe(el)
+  })
+}, 100)
