@@ -168,24 +168,6 @@ const contactHighlights = [
   'ניתן לשלוח תוכניות, תמונות וסרטונים מפורטים לתיאום מהיר'
 ]
 
-const heroGallery = [
-  {
-    src: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&w=700&q=80',
-    alt: 'לוח חשמל מסודר',
-    label: 'לוחות מבוקרים'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=700&q=80',
-    alt: 'חיווט בית חכם',
-    label: 'חיווט חכם'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1713937400833-f817938b51e4?auto=format&fit=crop&w=700&q=80',
-    alt: 'צוות התקנה מקצועי',
-    label: 'צוותים בשטח'
-  }
-]
-
 const galleryImages = [
   {
     src: 'https://images.unsplash.com/photo-1757924461488-ef9ad0670978?auto=format&fit=crop&w=900&q=80',
@@ -443,7 +425,6 @@ const observer = new IntersectionObserver((entries) => {
 
 // Navbar scroll effect
 const navbar = document.querySelector('.navbar')
-let lastScroll = 0
 
 window.addEventListener('scroll', () => {
   const currentScroll = window.pageYOffset
@@ -453,21 +434,22 @@ window.addEventListener('scroll', () => {
   } else {
     navbar?.classList.remove('scrolled')
   }
-  
-  lastScroll = currentScroll
 })
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener('click', function (e) {
+  anchor.addEventListener('click', (e) => {
     e.preventDefault()
-    const target = document.querySelector(this.getAttribute('href') || '')
-    if (target) {
-      const offsetTop = target.offsetTop - 80
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-      })
+    const href = anchor.getAttribute('href')
+    if (href) {
+      const target = document.querySelector(href)
+      if (target) {
+        const offsetTop = (target as HTMLElement).offsetTop - 80
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth'
+        })
+      }
     }
   })
 })
@@ -475,7 +457,7 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 // Set background images for sections with data-bg-image attribute
 document.querySelectorAll('.section-bg[data-bg-image]').forEach((section) => {
   const bgImage = section.getAttribute('data-bg-image')
-  if (bgImage) {
+  if (bgImage && section instanceof HTMLElement) {
     section.style.backgroundImage = `url(${bgImage})`
   }
 })
