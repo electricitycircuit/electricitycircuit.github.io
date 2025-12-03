@@ -544,6 +544,11 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.contact-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: stretch;
+}
+
 .services-list {
   list-style: none;
   padding: 0;
