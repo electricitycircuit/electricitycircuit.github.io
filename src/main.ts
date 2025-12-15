@@ -611,7 +611,11 @@ document.querySelectorAll('.section-bg[data-bg-image]').forEach((section) => {
 
 // Observe all animated elements after DOM is ready
 setTimeout(() => {
-  document.querySelectorAll('.section-head, .rich-text, .services-grid, .contact-grid, .faq-grid, .reasons-grid, .gallery-grid').forEach((el) => {
-    observer.observe(el)
-  })
+  document
+    .querySelectorAll(
+      '.section-head, .rich-text, .services-grid, .contact-grid, .faq-grid, .reasons-grid, .gallery-shell'
+    )
+    .forEach((el) => {
+      observer.observe(el)
+    })
 }, 100)
