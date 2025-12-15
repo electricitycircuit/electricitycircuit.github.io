@@ -35,7 +35,7 @@ const heroContent = {
 
 const storyParagraphs = [
   'עבורי חשמל הוא הרבה מעבר לכבלים ולוחות. הוא הבטיחות של הבית, האסתטיקה של התאורה וההמשכיות של העסק.',
-  'אני מלווה כל תהליך עם שרטוטים מסודרים, דו״חות בדיקה ועמידה בלוחות זמנים – כדי שנוכל להוריד דאגה אחת מהרשימה שלכם.'
+  'אני מלווה כל תהליך עם שרטוטים מסודרים, דו״חות בדיקה ועמידה בלוחות זמנים – כדי שנוכל להוריד דאגה אחת מהרשימה שלכם, כולל תכנון והתקנה של עמדות טעינה לרכב חשמלי בבית, בחניה משותפת או בעסק.'
 ]
 
 const icons = {
@@ -168,23 +168,42 @@ const contactHighlights = [
   'ניתן לשלוח תוכניות, תמונות וסרטונים מפורטים לתיאום מהיר'
 ]
 
-const galleryImages = [
-  {
-    src: 'https://images.unsplash.com/photo-1757924461488-ef9ad0670978?auto=format&fit=crop&w=900&q=80',
-    caption: 'תאורת אווירה בסלון חכם'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1584169417032-d34e8d805e8b?auto=format&fit=crop&w=900&q=80',
-    caption: 'שדרוג לוח תלת פאזי לעסק קמעונאי'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80',
-    caption: 'תכנון מוקפד עם אדריכלים בשטח'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?auto=format&fit=crop&w=900&q=80',
-    caption: 'עמדות טעינה לרכב חשמלי בבניין משרדים'
-  }
+type GalleryItem =
+  | {
+      type: 'image'
+      src: string
+      caption: string
+    }
+  | {
+      type: 'video'
+      src: string
+      poster?: string
+      caption: string
+    }
+
+const galleryItems: GalleryItem[] = [
+  { type: 'image', src: '/images/yaniv-working-on-a-canal.jpeg', caption: 'עבודה בתעלה – הכנות תשתית' },
+  { type: 'image', src: '/images/cabinet-wiring.jpg', caption: 'חיווט לוח חשמל מאורגן' },
+  { type: 'image', src: '/images/appartment-cabinet-before.jpg', caption: 'לפני – לוח חשמל בדירה לפני שדרוג' },
+  { type: 'image', src: '/images/appartment-cabinet-after.jpg', caption: 'אחרי – לוח חשמל משודרג ומסודר' },
+  { type: 'image', src: '/images/wiring-work.jpg', caption: 'חיווט מקצועי בשטח' },
+  { type: 'image', src: '/images/store-lighting-in-progress.jpg', caption: 'תאורת חנות – עבודה מסחרית בהתקדמות' },
+  { type: 'image', src: '/images/store-lighting-in-progress-2.jpg', caption: 'תאורת חנות – המשך התקנה וסידור' },
+  { type: 'image', src: '/images/yaniv-working-on-store-lighting.jpg', caption: 'יניב בעבודה על תאורת חנות' },
+  { type: 'image', src: '/images/canal-preparations.jpg', caption: 'הכנות תעלה ותשתיות חשמל' },
+  { type: 'image', src: '/images/lighting-projector-on-the-floor.jpg', caption: 'תאורת פרויקטור – הכנה ובדיקה' },
+  { type: 'image', src: '/images/city-lights-before.jpg', caption: 'לפני – תאורה חיצונית עירונית' },
+  { type: 'image', src: '/images/city-lights-after.jpg', caption: 'אחרי – שדרוג תאורה חיצונית עירונית' },
+  { type: 'image', src: '/images/dining-table-lighting.jpg', caption: 'תאורת פנים מעוצבת לפינת אוכל' },
+  { type: 'image', src: '/images/bathroom-lighting.jpg', caption: 'תאורת אמבטיה מדויקת ובטוחה' },
+  { type: 'image', src: '/images/porch-ceiling-fans.jpg', caption: 'תאורת חוץ ומאווררי תקרה במרפסת' },
+  { type: 'image', src: '/images/spotlights.jpg', caption: 'תאורת ספוטים מדויקת' },
+  { type: 'image', src: '/images/reading-nook-lighting.jpg', caption: 'נישת קריאה מוארת ונעימה' },
+  { type: 'image', src: '/images/cool-picture-with-lighting.jpg', caption: 'תאורה דקורטיבית – השראה' },
+  { type: 'image', src: '/images/IMG_0478.jpg', caption: 'בדיקת לוח חשמל' },
+  { type: 'image', src: '/images/IMG_0630.jpg', caption: 'חיבורי שטח בבדיקה' },
+  { type: 'image', src: '/images/panel-after.jpg', caption: 'מבט מקרוב – לוח לאחר סידור' },
+  { type: 'video', src: '/images/cabinet-wiring-timelapse.mp4', poster: '/images/cabinet-wiring.jpg', caption: 'טיימלאפס – עבודה על לוח חשמל' }
 ]
 
 const faqs = [
@@ -248,7 +267,7 @@ app.innerHTML = `
         <div class="badge">${heroContent.badge}</div>
         <h1>${heroContent.title}<span>${heroContent.subtitle}</span></h1>
         <p>${heroContent.intro}</p>
-        <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל בכיר</p>
+        <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל</p>
         <div class="hero-cta">
           <a class="btn primary" href="tel:+972525551309" aria-label="התקשרו עכשיו">שיחה מיידית</a>
           <a class="btn secondary" href="#contact" aria-label="צור קשר">השארת פרטים</a>
@@ -274,7 +293,7 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="section services section-bg" id="services" data-bg-image="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1920&q=80">
+    <section class="section services section-bg" id="services" data-bg-image="/images/wiring-work.jpg">
       <div class="section-head">
         <p class="eyebrow">השירותים שלנו</p>
         <h2>פתרונות חשמל מותאמים לבית ולעסק</h2>
@@ -310,7 +329,7 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="section reasons section-bg" id="reasons" data-bg-image="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1920&q=80">
+    <section class="section reasons section-bg" id="reasons" data-bg-image="/images/store-lighting-in-progress.jpg">
       <div class="section-head">
         <p class="eyebrow">למה לבחור בנו</p>
         <h2>מעגל החשמל – סטנדרט של דיוק ואמינות</h2>
@@ -349,23 +368,41 @@ app.innerHTML = `
       </div>
     </section>
 
-    <section class="section gallery section-bg" id="gallery" data-bg-image="https://images.unsplash.com/photo-1757924461488-ef9ad0670978?auto=format&fit=crop&w=1920&q=80">
+    <section class="section gallery section-bg" id="gallery" data-bg-image="/images/city-lights-after.jpg">
       <div class="section-head">
         <p class="eyebrow">מהשטח</p>
         <h2>פרויקטים ותיעוד</h2>
         <p class="section-desc">שילוב של קונסטרוקציה נקייה, סימון מדויק ותיעוד צילומי לכל לקוח.</p>
       </div>
-      <div class="gallery-grid">
-        ${galleryImages
-          .map(
-            (image) => `
-              <figure class="gallery-card">
-                <img src="${image.src}" alt="${image.caption}" loading="lazy" />
-                <figcaption>${image.caption}</figcaption>
+      <div class="gallery-shell">
+        <button class="gallery-nav prev" aria-label="גלילה לאחור">›</button>
+        <div class="gallery-track" aria-label="גלריה">
+          ${galleryItems
+            .map((item, index) => {
+              const baseAttrs = `data-index="${index}" data-type="${item.type}" data-src="${item.src}" data-caption="${item.caption.replace(/"/g, '&quot;')}"`
+              const posterAttr = item.type === 'video' && item.poster ? `data-poster="${item.poster}"` : ''
+
+              if (item.type === 'video') {
+                return `
+              <figure class="gallery-card video-card" ${baseAttrs} ${posterAttr} tabindex="0">
+                <div class="video-wrapper">
+                  <img src="${item.poster ?? '/images/panel-after.jpg'}" alt="${item.caption}" loading="lazy" />
+                  <div class="play-badge">▶</div>
+                </div>
+                <figcaption>${item.caption}</figcaption>
               </figure>
             `
-          )
-          .join('')}
+              }
+              return `
+              <figure class="gallery-card" ${baseAttrs} tabindex="0">
+                <img src="${item.src}" alt="${item.caption}" loading="lazy" />
+                <figcaption>${item.caption}</figcaption>
+              </figure>
+            `
+            })
+            .join('')}
+        </div>
+        <button class="gallery-nav next" aria-label="גלילה קדימה">‹</button>
       </div>
     </section>
 
@@ -408,6 +445,116 @@ app.innerHTML = `
     </footer>
   </main>
 `
+
+// Lightbox for gallery (images + video)
+const lightbox = document.createElement('div')
+lightbox.className = 'lightbox'
+lightbox.innerHTML = `
+  <div class="lightbox-backdrop"></div>
+  <div class="lightbox-body">
+    <button class="lightbox-close" aria-label="סגירה">×</button>
+    <div class="lightbox-content"></div>
+    <p class="lightbox-caption"></p>
+  </div>
+`
+document.body.appendChild(lightbox)
+
+const lightboxBackdrop = lightbox.querySelector('.lightbox-backdrop')
+const lightboxBody = lightbox.querySelector('.lightbox-body')
+const lightboxContent = lightbox.querySelector('.lightbox-content')
+const lightboxCaption = lightbox.querySelector('.lightbox-caption')
+const lightboxClose = lightbox.querySelector('.lightbox-close')
+
+const openLightbox = (item: GalleryItem) => {
+  if (!lightboxContent || !lightboxCaption || !lightboxBackdrop || !lightboxBody) return
+
+  lightboxContent.innerHTML = ''
+
+  if (item.type === 'video') {
+    const videoEl = document.createElement('video')
+    videoEl.src = item.src
+    videoEl.controls = true
+    videoEl.autoplay = true
+    videoEl.preload = 'metadata'
+    if (item.poster) {
+      videoEl.poster = item.poster
+    }
+    lightboxContent.appendChild(videoEl)
+  } else {
+    const imgEl = document.createElement('img')
+    imgEl.src = item.src
+    imgEl.alt = item.caption
+    lightboxContent.appendChild(imgEl)
+  }
+
+  lightboxCaption.textContent = item.caption
+  lightbox.classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+
+const closeLightbox = () => {
+  lightbox.classList.remove('open')
+  document.body.style.overflow = ''
+  if (lightboxContent) {
+    lightboxContent.innerHTML = ''
+  }
+}
+
+lightboxBackdrop?.addEventListener('click', closeLightbox)
+lightboxClose?.addEventListener('click', closeLightbox)
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+    closeLightbox()
+  }
+})
+
+// Gallery horizontal scroll + click to open lightbox
+const track = document.querySelector<HTMLElement>('.gallery-track')
+const prevBtn = document.querySelector<HTMLButtonElement>('.gallery-nav.prev')
+const nextBtn = document.querySelector<HTMLButtonElement>('.gallery-nav.next')
+
+const scrollByAmount = () => (track ? track.clientWidth * 0.8 : 300)
+
+prevBtn?.addEventListener('click', () => {
+  track?.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' })
+})
+
+nextBtn?.addEventListener('click', () => {
+  track?.scrollBy({ left: scrollByAmount(), behavior: 'smooth' })
+})
+
+track?.addEventListener('wheel', (e) => {
+  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    e.preventDefault()
+    track.scrollBy({ left: e.deltaY, behavior: 'smooth' })
+  }
+})
+
+const galleryCards = document.querySelectorAll<HTMLElement>('.gallery-card')
+
+galleryCards.forEach((card) => {
+  card.addEventListener('click', () => {
+    const type = card.dataset.type
+    const src = card.dataset.src
+    const caption = card.dataset.caption ?? ''
+    const poster = card.dataset.poster
+
+    if (!type || !src) return
+
+    if (type === 'video') {
+      openLightbox({ type: 'video', src, poster, caption })
+    } else {
+      openLightbox({ type: 'image', src, caption })
+    }
+  })
+
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      card.click()
+    }
+  })
+})
 
 // Scroll animations
 const observerOptions = {
