@@ -237,9 +237,10 @@ const renderIcon = ({ viewBox, path, className, filled }: IconGlyph) => {
   const pathAttrs = filled
     ? 'fill="currentColor"'
     : 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"'
+  // Icons are accessible to screen readers as they provide visual context
   return `
   <span class="icon-chip ${className ?? ''}">
-    <svg viewBox="${viewBox}" role="img" aria-hidden="true">
+    <svg viewBox="${viewBox}" role="img" aria-hidden="false">
       <path d="${path}" ${pathAttrs} />
     </svg>
   </span>
@@ -247,6 +248,8 @@ const renderIcon = ({ viewBox, path, className, filled }: IconGlyph) => {
 }
 
 app.innerHTML = `
+  <!-- Skip link for keyboard navigation -->
+  <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#hero" class="nav-logo">
@@ -260,7 +263,7 @@ app.innerHTML = `
       </div>
     </div>
   </nav>
-  <main class="page">
+  <main class="page" id="main-content">
     <header class="hero" id="hero">
       <div class="hero-content">
         <img class="logo-mark" src="${logoPath}" alt="מעגל החשמל - יניב כהן חשמלאי מוסמך" loading="eager" />
@@ -376,7 +379,7 @@ app.innerHTML = `
       </div>
       <div class="gallery-shell">
         <button class="gallery-nav prev" aria-label="גלילה לאחור">›</button>
-        <div class="gallery-track" aria-label="גלריה">
+        <div class="gallery-track" role="region" aria-label="גלריה">
           ${galleryItems
             .map((item, index) => {
               const baseAttrs = `data-index="${index}" data-type="${item.type}" data-src="${item.src}" data-caption="${item.caption.replace(/"/g, '&quot;')}"`
@@ -384,7 +387,7 @@ app.innerHTML = `
 
               if (item.type === 'video') {
                 return `
-              <figure class="gallery-card video-card" ${baseAttrs} ${posterAttr} tabindex="0">
+              <figure class="gallery-card video-card" ${baseAttrs} ${posterAttr}>
                 <div class="video-wrapper">
                   <img src="${item.poster ?? '/images/panel-after.jpg'}" alt="${item.caption}" loading="lazy" />
                   <div class="play-badge">▶</div>
@@ -394,7 +397,7 @@ app.innerHTML = `
             `
               }
               return `
-              <figure class="gallery-card" ${baseAttrs} tabindex="0">
+              <figure class="gallery-card" ${baseAttrs}>
                 <img src="${item.src}" alt="${item.caption}" loading="lazy" />
                 <figcaption>${item.caption}</figcaption>
               </figure>
@@ -440,7 +443,9 @@ app.innerHTML = `
         <a href="https://wa.me/972525551309" target="_blank" rel="noopener" aria-label="ווטסאפ">ווטסאפ</a> ·
         <a href="mailto:electricitycircuit@outlook.com" aria-label="אימייל">אימייל</a> ·
         <a href="tel:+972525551309" aria-label="טלפון">טלפון</a> ·
-        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener" aria-label="אינסטגרם">אינסטגרם</a>
+        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener" aria-label="אינסטגרם">אינסטגרם</a> ·
+        <!-- קישור נגישות: ברירת מחדל לדף סטטי, משודרג למודאל כאשר JavaScript פעיל -->
+        <a href="/accessibility.html" class="footer-accessibility-link">הצהרת נגישות</a>
       </p>
     </footer>
   </main>
@@ -460,21 +465,24 @@ lightbox.innerHTML = `
 document.body.appendChild(lightbox)
 
 const lightboxBackdrop = lightbox.querySelector('.lightbox-backdrop')
-const lightboxBody = lightbox.querySelector('.lightbox-body')
+const lightboxBody = lightbox.querySelector<HTMLElement>('.lightbox-body')
 const lightboxContent = lightbox.querySelector('.lightbox-content')
 const lightboxCaption = lightbox.querySelector('.lightbox-caption')
-const lightboxClose = lightbox.querySelector('.lightbox-close')
+const lightboxClose = lightbox.querySelector<HTMLButtonElement>('.lightbox-close')
+
+let lastFocusedForLightbox: HTMLElement | null = null
 
 const openLightbox = (item: GalleryItem) => {
   if (!lightboxContent || !lightboxCaption || !lightboxBackdrop || !lightboxBody) return
 
   lightboxContent.innerHTML = ''
+  lastFocusedForLightbox = document.activeElement instanceof HTMLElement ? document.activeElement : null
 
   if (item.type === 'video') {
     const videoEl = document.createElement('video')
     videoEl.src = item.src
     videoEl.controls = true
-    videoEl.autoplay = true
+    // No autoplay for better accessibility; user starts playback explicitly
     videoEl.preload = 'metadata'
     if (item.poster) {
       videoEl.poster = item.poster
@@ -490,6 +498,14 @@ const openLightbox = (item: GalleryItem) => {
   lightboxCaption.textContent = item.caption
   lightbox.classList.add('open')
   document.body.style.overflow = 'hidden'
+
+  // Move focus into the lightbox (close button is a good first target)
+  if (lightboxClose) {
+    lightboxClose.focus()
+  } else {
+    const firstFocusable = getFocusableElements(lightboxBody)[0]
+    firstFocusable?.focus()
+  }
 }
 
 const closeLightbox = () => {
@@ -498,13 +514,170 @@ const closeLightbox = () => {
   if (lightboxContent) {
     lightboxContent.innerHTML = ''
   }
+  if (lastFocusedForLightbox) {
+    lastFocusedForLightbox.focus()
+    lastFocusedForLightbox = null
+  }
 }
 
 lightboxBackdrop?.addEventListener('click', closeLightbox)
 lightboxClose?.addEventListener('click', closeLightbox)
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+lightbox.addEventListener('keydown', (e: KeyboardEvent) => {
+  // Only handle keyboard events when lightbox is open
+  if (!lightbox.classList.contains('open')) return
+
+  if (e.key === 'Escape') {
+    e.stopPropagation()
     closeLightbox()
+    return
+  }
+
+  if (e.key === 'Tab' && lightboxBody) {
+    const focusable = getFocusableElements(lightboxBody)
+    if (focusable.length === 0) return
+
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    const current = document.activeElement as HTMLElement
+
+    if (e.shiftKey && current === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && current === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
+})
+
+// Accessible accessibility statement modal
+// Non-JS fallback: הקישור מפנה ל-/accessibility.html, כאן רק מוסיפים שדרוג חווייתי עם מודאל.
+const accessibilityModal = document.createElement('div')
+accessibilityModal.className = 'accessibility-modal'
+accessibilityModal.innerHTML = `
+  <div class="accessibility-modal-backdrop"></div>
+  <div
+    class="accessibility-modal-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="accessibility-title"
+  >
+    <h2 id="accessibility-title">הצהרת נגישות</h2>
+    <p>
+      אנו רואים חשיבות רבה בהנגשת האתר שלנו עבור אנשים עם מוגבלויות ופועלים לשפר את חוויית הגלישה עבור כל
+      המשתמשים.
+    </p>
+    <p>
+      האתר פותח בהתאם לעקרונות תקן ישראלי 5568 המבוסס על הנחיות WCAG 2.0 לרמת AA, ככל שניתן עבור אתר תדמיתי קטן.
+    </p>
+    <h3>מה נעשה באתר</h3>
+    <ul class="services-list">
+      <li>שימוש בכותרות וסדר היררכי ברור לתוכן.</li>
+      <li>טקסט חלופי (alt) לתמונות בגלריה.</li>
+      <li>התאמת ניגודיות צבעים וגדלי טקסט לקריאה נוחה.</li>
+      <li>אפשרות ניווט באתר באמצעות מקלדת וטפסים עם תוויות ברורות.</li>
+    </ul>
+    <h3>יצירת קשר בנושא נגישות</h3>
+    <p>
+      אם נתקלתם בבעיה נגישות באתר, נשמח שתעדכנו אותנו כדי שנוכל לטפל בכך.
+    </p>
+    <p>
+      ניתן לפנות אלינו במייל:
+      <a href="mailto:electricitycircuit@outlook.com">electricitycircuit@outlook.com</a>
+      או בטלפון:
+      <a href="tel:+972525551309">052-555-1309</a>
+      ולפרט מה הייתה הפעולה שניסיתם לבצע ומהי הבעיה.
+    </p>
+    <button type="button" class="btn secondary accessibility-modal-close">סגירה</button>
+  </div>
+`
+document.body.appendChild(accessibilityModal)
+
+const accessibilityBackdrop = accessibilityModal.querySelector('.accessibility-modal-backdrop')
+const accessibilityDialog = accessibilityModal.querySelector<HTMLElement>('.accessibility-modal-dialog')
+const accessibilityCloseBtn = accessibilityModal.querySelector<HTMLButtonElement>('.accessibility-modal-close')
+const accessibilityTriggerLink = document.querySelector<HTMLAnchorElement>('.footer-accessibility-link')
+
+let lastFocusedElement: HTMLElement | null = null
+
+const getFocusableElements = (root: HTMLElement | null): HTMLElement[] => {
+  if (!root) return []
+  const focusableSelectors = [
+    'a[href]',
+    'button:not([disabled])',
+    'textarea',
+    'input[type="text"]',
+    'input[type="email"]',
+    'input[type="tel"]',
+    'select',
+    '[tabindex]:not([tabindex="-1"])'
+  ]
+  return Array.from(root.querySelectorAll<HTMLElement>(focusableSelectors.join(','))).filter((el) => {
+    if (el.hasAttribute('disabled')) return false
+    const ariaHidden = el.getAttribute('aria-hidden')
+    // Exclude only elements explicitly marked aria-hidden="true"
+    return ariaHidden !== 'true'
+  })
+}
+
+const openAccessibilityModal = () => {
+  accessibilityModal.classList.add('open')
+  document.body.style.overflow = 'hidden'
+  lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null
+
+  const focusable = getFocusableElements(accessibilityDialog)
+  if (focusable.length > 0) {
+    focusable[0].focus()
+  }
+}
+
+const closeAccessibilityModal = () => {
+  accessibilityModal.classList.remove('open')
+  document.body.style.overflow = ''
+  if (lastFocusedElement) {
+    lastFocusedElement.focus()
+  }
+}
+
+accessibilityTriggerLink?.addEventListener('click', (event) => {
+  // שדרוג חווייתי בלבד: מניעת ניווט לדף נפרד כאשר JavaScript פעיל
+  event.preventDefault()
+  openAccessibilityModal()
+})
+
+accessibilityBackdrop?.addEventListener('click', () => {
+  closeAccessibilityModal()
+})
+
+accessibilityCloseBtn?.addEventListener('click', () => {
+  closeAccessibilityModal()
+})
+
+accessibilityModal.addEventListener('keydown', (event: KeyboardEvent) => {
+  // Only handle keyboard events when modal is open
+  if (!accessibilityModal.classList.contains('open')) return
+
+  if (event.key === 'Escape') {
+    event.stopPropagation()
+    closeAccessibilityModal()
+    return
+  }
+
+  if (event.key === 'Tab' && accessibilityDialog) {
+    const focusable = getFocusableElements(accessibilityDialog)
+    if (focusable.length === 0) return
+
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    const current = document.activeElement as HTMLElement
+
+    if (event.shiftKey && current === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && current === last) {
+      event.preventDefault()
+      first.focus()
+    }
   }
 })
 
@@ -548,12 +721,8 @@ galleryCards.forEach((card) => {
     }
   })
 
-  card.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      card.click()
-    }
-  })
+  // Gallery cards are clickable but not in tab order (too many items)
+  // Users can navigate with prev/next buttons or mouse click
 })
 
 // Scroll animations
