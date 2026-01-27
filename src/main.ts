@@ -1,5 +1,8 @@
 import './style.css'
 
+// Google Analytics gtag type declaration
+declare function gtag(...args: any[]): void
+
 type IconGlyph = {
   viewBox: string
   path: string
@@ -788,3 +791,101 @@ setTimeout(() => {
       observer.observe(el)
     })
 }, 100)
+
+// Cookie Consent Banner
+const cookieConsent = document.createElement('div')
+cookieConsent.className = 'cookie-consent'
+cookieConsent.setAttribute('role', 'dialog')
+cookieConsent.setAttribute('aria-labelledby', 'cookie-consent-title')
+cookieConsent.setAttribute('aria-live', 'polite')
+cookieConsent.innerHTML = `
+  <div class="cookie-consent-content">
+    <div class="cookie-consent-text">
+      <h3 id="cookie-consent-title">שימוש בעוגיות</h3>
+      <p>אנו משתמשים בעוגיות כדי לשפר את חוויית הגלישה שלכם ולעקוב אחר ביצועי האתר. על ידי המשך השימוש באתר, אתם מסכימים לשימוש בעוגיות.</p>
+    </div>
+    <div class="cookie-consent-actions">
+      <button type="button" class="btn secondary cookie-consent-reject" aria-label="דחיית עוגיות">דחה</button>
+      <button type="button" class="btn primary cookie-consent-accept" aria-label="קבלת עוגיות">אשר</button>
+    </div>
+  </div>
+`
+document.body.appendChild(cookieConsent)
+
+const cookieConsentBanner = document.querySelector<HTMLElement>('.cookie-consent')
+const cookieAcceptBtn = document.querySelector<HTMLButtonElement>('.cookie-consent-accept')
+const cookieRejectBtn = document.querySelector<HTMLButtonElement>('.cookie-consent-reject')
+
+// Helper function to safely access localStorage (works with crawlers)
+const getStorageItem = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null
+  }
+}
+
+const setStorageItem = (key: string, value: string): void => {
+  try {
+    localStorage.setItem(key, value)
+  } catch {
+    // localStorage not available (crawlers, privacy mode) - silently fail
+  }
+}
+
+// Check if user has already made a choice
+const hasConsent = getStorageItem('cookie-consent')
+if (hasConsent) {
+  cookieConsentBanner?.classList.add('hidden')
+} else {
+  // Show banner after a short delay
+  setTimeout(() => {
+    cookieConsentBanner?.classList.add('visible')
+  }, 1000)
+}
+
+const acceptCookies = () => {
+  setStorageItem('cookie-consent', 'accepted')
+  cookieConsentBanner?.classList.remove('visible')
+  setTimeout(() => {
+    cookieConsentBanner?.classList.add('hidden')
+  }, 300)
+  
+  // Update Google Consent Mode
+  if (typeof gtag !== 'undefined') {
+    gtag('consent', 'update', {
+      'analytics_storage': 'granted',
+      'ad_storage': 'granted',
+      'ad_user_data': 'granted',
+      'ad_personalization': 'granted'
+    })
+  }
+}
+
+const rejectCookies = () => {
+  setStorageItem('cookie-consent', 'rejected')
+  cookieConsentBanner?.classList.remove('visible')
+  setTimeout(() => {
+    cookieConsentBanner?.classList.add('hidden')
+  }, 300)
+  
+  // Ensure consent remains denied
+  if (typeof gtag !== 'undefined') {
+    gtag('consent', 'update', {
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    })
+  }
+}
+
+cookieAcceptBtn?.addEventListener('click', acceptCookies)
+cookieRejectBtn?.addEventListener('click', rejectCookies)
+
+// Keyboard navigation for cookie banner
+cookieConsentBanner?.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    rejectCookies()
+  }
+})
