@@ -147,21 +147,6 @@ const contactChannels: ContactChannel[] = [
     href: 'https://wa.me/972525551309',
     accent: 'neutral',
     icon: icons.whatsapp
-  },
-  {
-    label: 'עקבו באינסטגרם',
-    value: '@yaniv.ca',
-    href: 'https://www.instagram.com/yaniv.ca',
-    accent: 'neutral',
-    icon: icons.instagram
-  },
-  {
-    label: 'כתבו מייל',
-    value: 'electricitycircuit@outlook.com',
-    href: 'mailto:electricitycircuit@outlook.com',
-    accent: 'neutral',
-    dir: 'ltr',
-    icon: icons.mail
   }
 ]
 
@@ -209,6 +194,9 @@ const galleryItems: GalleryItem[] = [
   { type: 'video', src: '/images/cabinet-wiring-timelapse.mp4', poster: '/images/cabinet-wiring.jpg', caption: 'טיימלאפס – עבודה על לוח חשמל' }
 ]
 
+const photoGalleryItems = galleryItems.filter((item): item is Extract<GalleryItem, { type: 'image' }> => item.type === 'image')
+const videoGalleryItems = galleryItems.filter((item): item is Extract<GalleryItem, { type: 'video' }> => item.type === 'video')
+
 const faqs = [
   {
     question: 'האם אתם חשמלאים מוסמכים ורשומים?',
@@ -233,7 +221,6 @@ if (!app) {
   throw new Error('Root element #app not found')
 }
 
-const currentYear = new Date().getFullYear()
 const assetBase = import.meta.env.BASE_URL
 const logoPath = `${assetBase}logo.png`
 const renderIcon = ({ viewBox, path, className, filled }: IconGlyph) => {
@@ -258,12 +245,16 @@ app.innerHTML = `
       <a href="#hero" class="nav-logo">
         <img src="${logoPath}" alt="מעגל החשמל" />
       </a>
-      <div class="nav-links">
+      <button type="button" class="nav-toggle" aria-label="תפריט" aria-expanded="false" aria-controls="nav-dropdown">
+        <span class="nav-toggle-icon"></span>
+      </button>
+      <div class="nav-links" id="nav-dropdown">
         <a href="#services">שירותים</a>
         <a href="#reasons">למה אנחנו</a>
-        <a href="#gallery">פרויקטים</a>
-        <a href="#contact" class="nav-cta">צור קשר</a>
+        <a href="#gallery">גלריה</a>
+        <a href="#contact">צור קשר</a>
       </div>
+      <a href="tel:+972525551309" class="nav-phone" aria-label="התקשרו">052-555-1309</a>
     </div>
   </nav>
   <main class="page" id="main-content">
@@ -275,8 +266,7 @@ app.innerHTML = `
         <p>${heroContent.intro}</p>
         <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל</p>
         <div class="hero-cta">
-          <a class="btn primary" href="tel:+972525551309" aria-label="התקשרו עכשיו">שיחה מיידית</a>
-          <a class="btn secondary" href="#contact" aria-label="צור קשר">השארת פרטים</a>
+          <a class="btn primary" href="tel:+972525551309" aria-label="חייג עכשיו">חייג עכשיו 052-555-1309</a>
         </div>
         <ul class="pill-list">
           <li>15+ שנות ניסיון</li>
@@ -289,20 +279,23 @@ app.innerHTML = `
 
     <section class="section story" id="about">
       <div class="section-head">
-        <p class="eyebrow">על הדרך שלי</p>
-        <h2>ליווי אישי עד למסירה מושלמת</h2>
+        <h2>על הדרך שלי</h2>
+        <p class="eyebrow">ליווי אישי עד למסירה מושלמת</p>
         <p class="section-desc">${heroContent.promise}</p>
       </div>
-      <div class="rich-text">
-        ${storyParagraphs.map((paragraph) => `<p>${paragraph}</p>`).join('')}
-        <p><strong>${heroContent.details}</strong></p>
+      <div class="story-content">
+        <img src="/images/yaniv-working-on-a-canal.jpeg" alt="יניב כהן בעבודה" class="story-image" loading="lazy" />
+        <div class="rich-text">
+          ${storyParagraphs.map((paragraph) => `<p>${paragraph}</p>`).join('')}
+          <p><strong>${heroContent.details}</strong></p>
+        </div>
       </div>
     </section>
 
     <section class="section services section-bg" id="services" data-bg-image="/images/wiring-work.jpg">
       <div class="section-head">
-        <p class="eyebrow">השירותים שלנו</p>
-        <h2>פתרונות חשמל מותאמים לבית ולעסק</h2>
+        <h2>השירותים שלנו</h2>
+        <p class="eyebrow">פתרונות חשמל מותאמים לבית ולעסק</p>
         <p class="section-desc">מתכנון נכון, דרך בחירת הציוד ועד התאמה בשטח – הכל מתועד ונמסר עם אחריות מלאה.</p>
       </div>
       <div class="services-grid">
@@ -324,8 +317,8 @@ app.innerHTML = `
 
     <section class="section business" id="business">
       <div class="section-head">
-        <p class="eyebrow">למגזר העסקי ואדריכלים</p>
-        <h2>שפה מקצועית משותפת ושקיפות מלאה</h2>
+        <h2>למגזר העסקי ואדריכלים</h2>
+        <p class="eyebrow">שפה מקצועית משותפת ושקיפות מלאה</p>
         <p class="section-desc">תיאום מלא מול אדריכלים, קבלנים ומפקחים כדי לעמוד בלוחות הזמנים ללא הפתעות.</p>
       </div>
       <div class="card business-card">
@@ -337,27 +330,24 @@ app.innerHTML = `
 
     <section class="section reasons section-bg" id="reasons" data-bg-image="/images/store-lighting-in-progress.jpg">
       <div class="section-head">
-        <p class="eyebrow">למה לבחור בנו</p>
-        <h2>מעגל החשמל – סטנדרט של דיוק ואמינות</h2>
+        <h2>למה לבחור בנו</h2>
+        <p class="eyebrow">מעגל החשמל – סטנדרט של דיוק ואמינות</p>
         <p class="section-desc">כל עבודה מבוצעת על ידי חשמלאי מוסמך בלבד, עם תיעוד מלא, אחריות ואמינות ללא פשרות.</p>
       </div>
-      <div class="reasons-grid">
-        ${reasons
-          .map(
-            (reason) => `
-              <div class="card reason-card">
-                <p>${reason}</p>
-              </div>
-            `
-          )
-          .join('')}
+      <div class="card reasons-card">
+        <ul class="services-list">
+          ${reasons.map((item) => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="reasons-cta">
+        <a class="btn primary" href="tel:+972525551309" aria-label="חייג עכשיו">חייג עכשיו 052-555-1309</a>
       </div>
     </section>
 
     <section class="section faq" id="faq">
       <div class="section-head">
-        <p class="eyebrow">שאלות נפוצות</p>
-        <h2>כל מה שצריך לדעת</h2>
+        <h2>שאלות נפוצות</h2>
+        <p class="eyebrow">כל מה שצריך לדעת</p>
         <p class="section-desc">מידע על הכשרות, זמינות ותהליכי בדיקה כדי שתדעו בדיוק למה לצפות בכל שלב.</p>
       </div>
       <div class="faq-grid">
@@ -376,29 +366,16 @@ app.innerHTML = `
 
     <section class="section gallery section-bg" id="gallery" data-bg-image="/images/city-lights-after.jpg">
       <div class="section-head">
-        <p class="eyebrow">מהשטח</p>
-        <h2>פרויקטים ותיעוד</h2>
+        <h2>גלריה</h2>
+        <p class="eyebrow">פרויקטים ותיעוד</p>
         <p class="section-desc">שילוב של קונסטרוקציה נקייה, סימון מדויק ותיעוד צילומי לכל לקוח.</p>
       </div>
-      <div class="gallery-shell">
-        <button class="gallery-nav prev" aria-label="גלילה לאחור">›</button>
-        <div class="gallery-track" role="region" aria-label="גלריה">
-          ${galleryItems
+      <div class="gallery-shell gallery-shell-photos" aria-label="גלריית תמונות">
+        <button class="gallery-nav prev" aria-label="גלילה לאחור - תמונות">›</button>
+        <div class="gallery-track" role="region" aria-label="תמונות">
+          ${photoGalleryItems
             .map((item, index) => {
               const baseAttrs = `data-index="${index}" data-type="${item.type}" data-src="${item.src}" data-caption="${item.caption.replace(/"/g, '&quot;')}"`
-              const posterAttr = item.type === 'video' && item.poster ? `data-poster="${item.poster}"` : ''
-
-              if (item.type === 'video') {
-                return `
-              <figure class="gallery-card video-card" ${baseAttrs} ${posterAttr}>
-                <div class="video-wrapper">
-                  <img src="${item.poster ?? '/images/panel-after.jpg'}" alt="${item.caption}" loading="lazy" />
-                  <div class="play-badge">▶</div>
-                </div>
-                <figcaption>${item.caption}</figcaption>
-              </figure>
-            `
-              }
               return `
               <figure class="gallery-card" ${baseAttrs}>
                 <img src="${item.src}" alt="${item.caption}" loading="lazy" />
@@ -408,14 +385,37 @@ app.innerHTML = `
             })
             .join('')}
         </div>
-        <button class="gallery-nav next" aria-label="גלילה קדימה">‹</button>
+        <button class="gallery-nav next" aria-label="גלילה קדימה - תמונות">‹</button>
+      </div>
+
+      <div class="gallery-subhead" aria-hidden="true">סרטונים</div>
+      <div class="gallery-shell gallery-shell-videos" aria-label="גלריית סרטונים">
+        <button class="gallery-nav prev" aria-label="גלילה לאחור - סרטונים">›</button>
+        <div class="gallery-track" role="region" aria-label="סרטונים">
+          ${videoGalleryItems
+            .map((item, index) => {
+              const baseAttrs = `data-index="${index}" data-type="${item.type}" data-src="${item.src}" data-caption="${item.caption.replace(/"/g, '&quot;')}"`
+              const posterAttr = item.poster ? `data-poster="${item.poster}"` : ''
+              return `
+              <figure class="gallery-card video-card" ${baseAttrs} ${posterAttr}>
+                <div class="video-wrapper">
+                  <img src="${item.poster ?? '/images/panel-after.jpg'}" alt="${item.caption}" loading="lazy" />
+                  <div class="play-badge" aria-hidden="true">▶</div>
+                </div>
+                <figcaption>${item.caption}</figcaption>
+              </figure>
+            `
+            })
+            .join('')}
+        </div>
+        <button class="gallery-nav next" aria-label="גלילה קדימה - סרטונים">‹</button>
       </div>
     </section>
 
     <section class="section contact" id="contact">
       <div class="section-head">
-        <p class="eyebrow">רוצים ייעוץ או הצעת מחיר?</p>
-        <h2>השאירו פרטים ונחזור אליכם במהירות</h2>
+        <h2>רוצים ייעוץ או הצעת מחיר?</h2>
+        <p class="eyebrow">השאירו פרטים ונחזור אליכם במהירות</p>
         <p class="section-desc">נשמח לעזור לתכנן את מערכת החשמל המושלמת לבית או לעסק. שלחו תוכניות, תמונות או תיאור קצר כדי שנתאים פתרון מדויק.</p>
       </div>
       <div class="contact-grid">
@@ -432,7 +432,7 @@ app.innerHTML = `
           .join('')}
         <div class="card response-card">
           <p class="label">מהיר ומדויק</p>
-          <p class="value">שיתוף קבצים ותיאום צפוי מראש</p>
+          <p class="value">זמינות</p>
           <ul class="services-list compact">
             ${contactHighlights.map((item) => `<li>${item}</li>`).join('')}
           </ul>
@@ -441,16 +441,18 @@ app.innerHTML = `
     </section>
 
     <footer class="footer">
-      <p>© ${currentYear} מעגל החשמל – יניב כהן. חשמלאי מוסמך והנדסאי חשמל.</p>
       <p>
-        <a href="https://wa.me/972525551309" target="_blank" rel="noopener" aria-label="ווטסאפ">ווטסאפ</a> ·
-        <a href="mailto:electricitycircuit@outlook.com" aria-label="אימייל">אימייל</a> ·
-        <a href="tel:+972525551309" aria-label="טלפון">טלפון</a> ·
-        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener" aria-label="אינסטגרם">אינסטגרם</a> ·
-        <!-- קישור נגישות: ברירת מחדל לדף סטטי, משודרג למודאל כאשר JavaScript פעיל -->
+        <a href="/privacy.html" class="footer-privacy-link">מדיניות פרטיות</a>
+        <span class="footer-sep"> · </span>
         <a href="/accessibility.html" class="footer-accessibility-link">הצהרת נגישות</a>
+        <span class="footer-sep"> · </span>
+        <a href="https://www.instagram.com/yaniv.ca" target="_blank" rel="noopener" aria-label="אינסטגרם">אינסטגרם</a>
       </p>
     </footer>
+    <div class="mobile-footer-bar" aria-hidden="true">
+      <a href="tel:+972525551309" class="mobile-footer-phone" aria-label="התקשרו">052-555-1309</a>
+      <a href="https://wa.me/972525551309" class="mobile-footer-whatsapp" target="_blank" rel="noopener" aria-label="ווטסאפ">ווטסאפ</a>
+    </div>
   </main>
 `
 
@@ -585,16 +587,90 @@ accessibilityModal.innerHTML = `
       אם נתקלתם בבעיה נגישות באתר, נשמח שתעדכנו אותנו כדי שנוכל לטפל בכך.
     </p>
     <p>
-      ניתן לפנות אלינו במייל:
-      <a href="mailto:electricitycircuit@outlook.com">electricitycircuit@outlook.com</a>
-      או בטלפון:
-      <a href="tel:+972525551309">052-555-1309</a>
-      ולפרט מה הייתה הפעולה שניסיתם לבצע ומהי הבעיה.
+      ניתן לפנות אלינו בטלפון <a href="tel:+972525551309">052-555-1309</a> או בווטסאפ ולפרט מה הייתה הפעולה שניסיתם לבצע ומהי הבעיה.
     </p>
     <button type="button" class="btn secondary accessibility-modal-close">סגירה</button>
   </div>
 `
 document.body.appendChild(accessibilityModal)
+
+// Privacy policy modal (same behavior as accessibility)
+const privacyModal = document.createElement('div')
+privacyModal.className = 'accessibility-modal privacy-modal'
+privacyModal.setAttribute('role', 'dialog')
+privacyModal.setAttribute('aria-labelledby', 'privacy-title')
+privacyModal.setAttribute('aria-modal', 'true')
+privacyModal.innerHTML = `
+  <div class="accessibility-modal-backdrop"></div>
+  <div class="accessibility-modal-dialog" role="document" aria-labelledby="privacy-title">
+    <h2 id="privacy-title">מדיניות פרטיות</h2>
+    <p>אנו מכבדים את פרטיותכם. בדף זה תמצאו מידע על איסוף ושימוש במידע באתר.</p>
+    <h3>עוגיות (Cookies)</h3>
+    <p>האתר משתמש בעוגיות לצורכי ניתוח ביצועים (Google Analytics/Google Ads). ניתן לבחור לאשר או לדחות עוגיות בחלון ההסכמה שמופיע בביקור הראשון. הבחירה נשמרת במכשיר שלכם.</p>
+    <h3>נתונים שנאספים</h3>
+    <p>במקביל לאישור עוגיות – נתונים כלליים על גלישה (כגון דפים שנצפו, מקור הכניסה) לצורכי שיפור האתר ומדידת קמפיינים. לא נמכרים נתונים לצדדים שלישיים.</p>
+    <h3>יצירת קשר</h3>
+    <p>לכל שאלה בנושא פרטיות ניתן לפנות בטלפון <a href="tel:+972525551309">052-555-1309</a> או בווטסאפ.</p>
+    <button type="button" class="btn secondary privacy-modal-close">סגירה</button>
+  </div>
+`
+document.body.appendChild(privacyModal)
+
+const privacyBackdrop = privacyModal.querySelector('.accessibility-modal-backdrop')
+const privacyDialog = privacyModal.querySelector<HTMLElement>('.accessibility-modal-dialog')
+const privacyCloseBtn = privacyModal.querySelector<HTMLButtonElement>('.privacy-modal-close')
+const privacyTriggerLinks = () => document.querySelectorAll<HTMLAnchorElement>('.footer-privacy-link, .cookie-consent-privacy-link')
+
+let lastFocusedPrivacy: HTMLElement | null = null
+
+const openPrivacyModal = () => {
+  privacyModal.classList.add('open')
+  document.body.style.overflow = 'hidden'
+  lastFocusedPrivacy = document.activeElement instanceof HTMLElement ? document.activeElement : null
+  const focusable = getFocusableElements(privacyDialog)
+  if (focusable.length > 0) focusable[0].focus()
+}
+
+const closePrivacyModal = () => {
+  privacyModal.classList.remove('open')
+  document.body.style.overflow = ''
+  if (lastFocusedPrivacy) lastFocusedPrivacy.focus()
+}
+
+privacyTriggerLinks().forEach((link) => {
+  link.addEventListener('click', (e) => {
+    if (link.getAttribute('href') === '/privacy.html') {
+      e.preventDefault()
+      openPrivacyModal()
+    }
+  })
+})
+
+privacyBackdrop?.addEventListener('click', closePrivacyModal)
+privacyCloseBtn?.addEventListener('click', closePrivacyModal)
+
+privacyModal.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (!privacyModal.classList.contains('open')) return
+  if (event.key === 'Escape') {
+    event.stopPropagation()
+    closePrivacyModal()
+    return
+  }
+  if (event.key === 'Tab' && privacyDialog) {
+    const focusable = getFocusableElements(privacyDialog)
+    if (focusable.length === 0) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    const current = document.activeElement as HTMLElement
+    if (event.shiftKey && current === first) {
+      event.preventDefault()
+      last.focus()
+    } else if (!event.shiftKey && current === last) {
+      event.preventDefault()
+      first.focus()
+    }
+  }
+})
 
 const accessibilityBackdrop = accessibilityModal.querySelector('.accessibility-modal-backdrop')
 const accessibilityDialog = accessibilityModal.querySelector<HTMLElement>('.accessibility-modal-dialog')
@@ -684,26 +760,30 @@ accessibilityModal.addEventListener('keydown', (event: KeyboardEvent) => {
   }
 })
 
-// Gallery horizontal scroll + click to open lightbox
-const track = document.querySelector<HTMLElement>('.gallery-track')
-const prevBtn = document.querySelector<HTMLButtonElement>('.gallery-nav.prev')
-const nextBtn = document.querySelector<HTMLButtonElement>('.gallery-nav.next')
+// Gallery horizontal scroll (photos + videos) + click to open lightbox
+const galleryShells = document.querySelectorAll<HTMLElement>('.gallery-shell')
 
-const scrollByAmount = () => (track ? track.clientWidth * 0.8 : 300)
+galleryShells.forEach((shell) => {
+  const track = shell.querySelector<HTMLElement>('.gallery-track')
+  const prevBtn = shell.querySelector<HTMLButtonElement>('.gallery-nav.prev')
+  const nextBtn = shell.querySelector<HTMLButtonElement>('.gallery-nav.next')
 
-prevBtn?.addEventListener('click', () => {
-  track?.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' })
-})
+  const scrollByAmount = () => (track ? track.clientWidth * 0.8 : 300)
 
-nextBtn?.addEventListener('click', () => {
-  track?.scrollBy({ left: scrollByAmount(), behavior: 'smooth' })
-})
+  prevBtn?.addEventListener('click', () => {
+    track?.scrollBy({ left: -scrollByAmount(), behavior: 'smooth' })
+  })
 
-track?.addEventListener('wheel', (e) => {
-  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-    e.preventDefault()
-    track.scrollBy({ left: e.deltaY, behavior: 'smooth' })
-  }
+  nextBtn?.addEventListener('click', () => {
+    track?.scrollBy({ left: scrollByAmount(), behavior: 'smooth' })
+  })
+
+  track?.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+      e.preventDefault()
+      track.scrollBy({ left: e.deltaY, behavior: 'smooth' })
+    }
+  })
 })
 
 const galleryCards = document.querySelectorAll<HTMLElement>('.gallery-card')
@@ -747,11 +827,45 @@ const navbar = document.querySelector('.navbar')
 
 window.addEventListener('scroll', () => {
   const currentScroll = window.pageYOffset
-  
+
   if (currentScroll > 50) {
     navbar?.classList.add('scrolled')
   } else {
     navbar?.classList.remove('scrolled')
+  }
+})
+
+// Mobile nav dropdown
+const navToggle = document.querySelector<HTMLButtonElement>('.nav-toggle')
+const navDropdown = document.querySelector('#nav-dropdown')
+
+const closeNavMenu = () => {
+  navbar?.classList.remove('open')
+  navToggle?.setAttribute('aria-expanded', 'false')
+}
+
+const openNavMenu = () => {
+  navbar?.classList.add('open')
+  navToggle?.setAttribute('aria-expanded', 'true')
+}
+
+const toggleNavMenu = () => {
+  if (navbar?.classList.contains('open')) {
+    closeNavMenu()
+  } else {
+    openNavMenu()
+  }
+}
+
+navToggle?.addEventListener('click', toggleNavMenu)
+
+navDropdown?.querySelectorAll('a').forEach((link) => {
+  link.addEventListener('click', closeNavMenu)
+})
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && navbar?.classList.contains('open')) {
+    closeNavMenu()
   }
 })
 
@@ -785,7 +899,7 @@ document.querySelectorAll('.section-bg[data-bg-image]').forEach((section) => {
 setTimeout(() => {
   document
     .querySelectorAll(
-      '.section-head, .rich-text, .services-grid, .contact-grid, .faq-grid, .reasons-grid, .gallery-shell'
+      '.section-head, .rich-text, .story-content, .services-grid, .contact-grid, .faq-grid, .reasons-card, .gallery-shell'
     )
     .forEach((el) => {
       observer.observe(el)
@@ -802,7 +916,7 @@ cookieConsent.innerHTML = `
   <div class="cookie-consent-content">
     <div class="cookie-consent-text">
       <h3 id="cookie-consent-title">שימוש בעוגיות</h3>
-      <p>אנו משתמשים בעוגיות כדי לשפר את חוויית הגלישה שלכם ולעקוב אחר ביצועי האתר. על ידי המשך השימוש באתר, אתם מסכימים לשימוש בעוגיות.</p>
+      <p>אנו משתמשים בעוגיות כדי לשפר את חוויית הגלישה שלכם ולעקוב אחר ביצועי האתר. <a href="/privacy.html" class="cookie-consent-privacy-link footer-privacy-link">מדיניות פרטיות</a>.</p>
     </div>
     <div class="cookie-consent-actions">
       <button type="button" class="btn secondary cookie-consent-reject" aria-label="דחיית עוגיות">דחה</button>

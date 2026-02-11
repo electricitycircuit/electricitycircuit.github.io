@@ -16,21 +16,20 @@ if (!cssFile) {
   process.exit(1)
 }
 
-// Update accessibility.html in dist/ (Vite copies it from public/ during build)
-const accessibilityPath = join(process.cwd(), 'dist', 'accessibility.html')
-if (!existsSync(accessibilityPath)) {
-  console.error('accessibility.html not found in dist/. Make sure it exists in public/ and run build.')
-  process.exit(1)
+// Update accessibility.html and privacy.html in dist/ (Vite copies from public/ during build)
+const staticPages = ['accessibility.html', 'privacy.html']
+for (const name of staticPages) {
+  const filePath = join(process.cwd(), 'dist', name)
+  if (!existsSync(filePath)) {
+    console.error(`${name} not found in dist/. Make sure it exists in public/ and run build.`)
+    process.exit(1)
+  }
+  let html = readFileSync(filePath, 'utf-8')
+  html = html.replace(
+    /<link rel="stylesheet" href="[^"]*" ?\/?>/,
+    `<link rel="stylesheet" href="/assets/${cssFile}">`
+  )
+  writeFileSync(filePath, html)
+  console.log(`✓ Updated ${name} to use /assets/${cssFile}`)
 }
-
-let html = readFileSync(accessibilityPath, 'utf-8')
-
-// Replace the CSS reference (handles both /src/style.css and any existing /assets/ reference)
-html = html.replace(
-  /<link rel="stylesheet" href="[^"]*" ?\/?>/,
-  `<link rel="stylesheet" href="/assets/${cssFile}">`
-)
-
-writeFileSync(accessibilityPath, html)
-console.log(`✓ Updated accessibility.html to use /assets/${cssFile}`)
 
