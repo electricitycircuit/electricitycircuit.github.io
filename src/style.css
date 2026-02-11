@@ -1347,7 +1347,8 @@ body {
   }
 
   .nav-container {
-    padding: 2px 12px;
+    padding: 2px 8px;
+    gap: 6px;
     grid-template-columns: auto 1fr auto;
     grid-template-areas: 'logo toggle phone';
   }
@@ -1401,6 +1402,7 @@ body {
 
   .nav-logo img {
     height: 100px;
+    max-width: 120px;
   }
 
   .page {
@@ -1476,6 +1478,17 @@ body {
   .btn {
     padding: 14px 28px;
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-logo img {
+    max-width: 108px;
+  }
+
+  .nav-toggle {
+    width: 40px;
+    height: 40px;
   }
 }
 
