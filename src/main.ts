@@ -146,8 +146,8 @@ const reasons = [
 const contactChannels: ContactChannel[] = [
   {
     label: 'התקשרו עכשיו',
-    value: '055-4579669',
-    href: 'tel:+972554579669',
+    value: '052-555-1309',
+    href: 'tel:+972525551309',
     accent: 'primary',
     dir: 'ltr',
     icon: icons.phone
@@ -265,7 +265,7 @@ app.innerHTML = `
         <a href="#gallery">גלריה</a>
         <a href="#contact">צור קשר</a>
       </div>
-      <a href="tel:+972554579669" class="nav-phone" aria-label="התקשרו">055-4579669</a>
+      <a href="tel:+972525551309" class="nav-phone" aria-label="התקשרו">052-555-1309</a>
     </div>
   </nav>
   <main class="page" id="main-content">
@@ -277,7 +277,7 @@ app.innerHTML = `
         <p>${heroContent.intro}</p>
         <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל</p>
         <div class="hero-cta">
-          <a class="btn primary" href="tel:+972554579669" aria-label="חייג עכשיו">חייג עכשיו 055-4579669</a>
+          <a class="btn primary" href="tel:+972525551309" aria-label="חייג עכשיו">חייג עכשיו 052-555-1309</a>
         </div>
         <ul class="pill-list">
           <li>15+ שנות ניסיון</li>
@@ -290,7 +290,7 @@ app.innerHTML = `
 
     <section class="section story" id="about">
       <div class="section-head">
-        <h2>על הדרך שלי</h2>
+        <h2>מי אני/h2>
         <p class="eyebrow">בטיחות, עבודה נקייה ושקיפות מלאה</p>
         <p class="section-desc">${heroContent.promise}</p>
       </div>
@@ -351,7 +351,7 @@ app.innerHTML = `
         </ul>
       </div>
       <div class="reasons-cta">
-        <a class="btn primary" href="tel:+972554579669" aria-label="חייג עכשיו">חייג עכשיו 055-4579669</a>
+        <a class="btn primary" href="tel:+972525551309" aria-label="חייג עכשיו">חייג עכשיו 052-555-1309</a>
       </div>
     </section>
 
@@ -461,7 +461,7 @@ app.innerHTML = `
       </p>
     </footer>
     <div class="mobile-footer-bar" aria-hidden="true">
-      <a href="tel:+972554579669" class="mobile-footer-phone" aria-label="התקשרו">055-4579669</a>
+      <a href="tel:+972525551309" class="mobile-footer-phone" aria-label="התקשרו">052-555-1309</a>
       <a href="https://wa.me/972525551309" class="mobile-footer-whatsapp" target="_blank" rel="noopener" aria-label="ווטסאפ">ווטסאפ</a>
     </div>
   </main>
@@ -598,7 +598,7 @@ accessibilityModal.innerHTML = `
       אם נתקלתם בבעיה נגישות באתר, נשמח שתעדכנו אותנו כדי שנוכל לטפל בכך.
     </p>
     <p>
-      ניתן לפנות אלינו בטלפון <a href="tel:+972554579669">055-4579669</a> או בווטסאפ ולפרט מה הייתה הפעולה שניסיתם לבצע ומהי הבעיה.
+      ניתן לפנות אלינו בטלפון <a href="tel:+972525551309">052-555-1309</a> או בווטסאפ ולפרט מה הייתה הפעולה שניסיתם לבצע ומהי הבעיה.
     </p>
     <button type="button" class="btn secondary accessibility-modal-close">סגירה</button>
   </div>
@@ -621,7 +621,7 @@ privacyModal.innerHTML = `
     <h3>נתונים שנאספים</h3>
     <p>במקביל לאישור עוגיות – נתונים כלליים על גלישה (כגון דפים שנצפו, מקור הכניסה) לצורכי שיפור האתר ומדידת קמפיינים. לא נמכרים נתונים לצדדים שלישיים.</p>
     <h3>יצירת קשר</h3>
-    <p>לכל שאלה בנושא פרטיות ניתן לפנות בטלפון <a href="tel:+972554579669">055-4579669</a> או בווטסאפ.</p>
+    <p>לכל שאלה בנושא פרטיות ניתן לפנות בטלפון <a href="tel:+972525551309">052-555-1309</a> או בווטסאפ.</p>
     <button type="button" class="btn secondary privacy-modal-close">סגירה</button>
   </div>
 `
@@ -962,6 +962,7 @@ const setStorageItem = (key: string, value: string): void => {
 const hasConsent = getStorageItem('cookie-consent')
 if (hasConsent) {
   cookieConsentBanner?.classList.add('hidden')
+  document.body.classList.add('has-cookie-choice')
 } else {
   // Show banner after a short delay
   setTimeout(() => {
@@ -975,6 +976,7 @@ const acceptCookies = () => {
   setTimeout(() => {
     cookieConsentBanner?.classList.add('hidden')
   }, 300)
+  document.body.classList.add('has-cookie-choice')
   
   // Update Google Consent Mode
   if (typeof gtag !== 'undefined') {
@@ -993,6 +995,7 @@ const rejectCookies = () => {
   setTimeout(() => {
     cookieConsentBanner?.classList.add('hidden')
   }, 300)
+  document.body.classList.add('has-cookie-choice')
   
   // Ensure consent remains denied
   if (typeof gtag !== 'undefined') {
