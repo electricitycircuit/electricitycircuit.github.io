@@ -290,7 +290,7 @@ app.innerHTML = `
 
     <section class="section story" id="about">
       <div class="section-head">
-        <h2>מי אני/h2>
+        <h2>מי אני</h2>
         <p class="eyebrow">בטיחות, עבודה נקייה ושקיפות מלאה</p>
         <p class="section-desc">${heroContent.promise}</p>
       </div>

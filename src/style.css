@@ -1433,10 +1433,6 @@ body {
   }
 
   .mobile-footer-bar {
-    display: flex;
-  }
-
-  .mobile-footer-bar {
     padding: 8px 12px;
   }
 
@@ -1447,6 +1443,11 @@ body {
 
   .mobile-footer-whatsapp {
     padding: 10px 14px;
+  }
+
+  body.has-cookie-choice .mobile-footer-bar {
+    /* Show bottom call bar only after cookie choice, so it doesn't clash with the banner */
+    display: flex;
   }
 
   .story-content {
