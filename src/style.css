@@ -1388,7 +1388,7 @@ body {
   }
 
   body.has-cookie-choice .nav-phone {
-    /* After cookie banner is dismissed, hide top phone on mobile and rely on bottom bar */
+    /* After cookie choice, hide top phone on mobile and rely on bottom bar */
     display: none;
   }
 
@@ -1446,7 +1446,7 @@ body {
   }
 
   body.has-cookie-choice .mobile-footer-bar {
-    /* Show bottom call bar only after cookie choice, so it doesn't clash with the banner */
+    /* Show bottom call bar on mobile only after cookie choice, so it doesn't clash with the banner */
     display: flex;
   }
 
