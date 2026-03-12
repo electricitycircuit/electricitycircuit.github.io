@@ -327,7 +327,7 @@ body {
 }
 
 .hero h1 {
-  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
   line-height: 1.1;
   margin: 0;
   font-weight: 700;
@@ -1462,6 +1462,10 @@ body {
     background-attachment: scroll;
     min-height: auto;
     padding: var(--spacing-xl) var(--spacing-sm);
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
   }
 
   .services-grid,
