@@ -26,8 +26,8 @@ type ContactChannel = {
 }
 
 const heroContent = {
-  badge: 'חשמלאי מוסמך לבית ולעסק',
-  title: 'מעגל החשמל',
+  badge: '',
+  title: 'יניב כהן – חשמלאי מוסמך',
   subtitle: 'תיקונים ועבודות חשמל לבית ולעסק',
   intro:
     'קצר, שקע שלא עובד או תאורה שצריך להחליף או להתקין? אני יניב כהן, חשמלאי מוסמך והנדסאי חשמל, מטפל בתקלות ועבודות חשמל בבתים ובעסקים באזור המרכז והשרון – בצורה בטוחה, נקייה ובשקיפות מלאה.',
@@ -271,7 +271,6 @@ app.innerHTML = `
   <main class="page" id="main-content">
     <header class="hero" id="hero">
       <div class="hero-content">
-        <div class="badge">${heroContent.badge}</div>
         <h1>${heroContent.title}<span>${heroContent.subtitle}</span></h1>
         <p>${heroContent.intro}</p>
         <p class="hero-cert">חשמלאי מוסמך רשום במשרד העבודה | הנדסאי חשמל</p>
