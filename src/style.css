@@ -311,21 +311,6 @@ body {
   }
 }
 
-.hero-content .logo-mark {
-  width: clamp(120px, 15vw, 180px);
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-  animation: fadeIn 1.2s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .badge {
   align-self: flex-start;
   padding: 8px 20px;

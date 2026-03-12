@@ -271,7 +271,6 @@ app.innerHTML = `
   <main class="page" id="main-content">
     <header class="hero" id="hero">
       <div class="hero-content">
-        <img class="logo-mark" src="${logoPath}" alt="מעגל החשמל - יניב כהן חשמלאי מוסמך" loading="eager" />
         <div class="badge">${heroContent.badge}</div>
         <h1>${heroContent.title}<span>${heroContent.subtitle}</span></h1>
         <p>${heroContent.intro}</p>
